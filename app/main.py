@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
+from app.api.routes import router as api_router
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -24,11 +25,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/", tags=["Health Check"])
-async def health_check():
-    return {
-        "status": "online",
-        "system": settings.PROJECT_NAME,
-        "version": settings.VERSION,
-        "ollama_target": settings.OLLAMA_BASE_URL
-    }
+app.include_router(api_router, prefix="/api/v1")
+
+@app.get("/")
+def root():
+    return {"message": "Servidor Qantu activo"}
