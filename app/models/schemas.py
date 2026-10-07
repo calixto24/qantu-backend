@@ -7,3 +7,11 @@ class ChatRequest(BaseModel):
 class ChatResponse(BaseModel):
     respuesta_texto: str
     status: str = "success"
+
+class WSInputMessage(BaseModel):
+    event: str     
+    payload: str   
+
+class WSOutputMessage(BaseModel):
+    event: str     
+    content: Optional[str] = None
