@@ -218,3 +218,16 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+temp_audio/*
+
+# Entornos virtuales
+venv/
+.venv/
+
+# Archivos de variables de entorno locales
+.env
+*.env.local
+
+# Excepcionar el archivo de ejemplo para que sí se suba
+!.env.example
