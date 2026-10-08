@@ -1,3 +1,4 @@
+import os
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
@@ -7,6 +8,9 @@ class Settings(BaseSettings):
     # Configuración de Ollama Local
     OLLAMA_BASE_URL: str = "http://localhost:11434"
     OLLAMA_MODEL: str = "llama3.2:3b"
+
+    # Ruta para guardar audios temporales
+    TEMP_AUDIO_DIR: str = "temp_audio"
     
     # Identidad pedagógica y reglas de seguridad para Qantu
     SYSTEM_PROMPT: str = (
@@ -34,3 +38,5 @@ class Settings(BaseSettings):
     )
 
 settings = Settings()
+
+os.makedirs(settings.TEMP_AUDIO_DIR, exist_ok=True)
