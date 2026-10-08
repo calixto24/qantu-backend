@@ -6,6 +6,8 @@ from app.config import settings
 import shutil
 import os
 import uuid
+from pydantic import BaseModel
+from app.services.tts_service import tts_service
 
 router = APIRouter()
 
@@ -54,3 +56,21 @@ async def transcribir_audio(file: UploadFile = File(...)):
         # Limpieza del archivo temporal
         if os.path.exists(temp_path):
             os.remove(temp_path)
+
+class TTSRequest(BaseModel):
+    texto: str
+
+@router.post("/tts/sintetizar")
+async def sintetizar_texto(request: TTSRequest):
+    if not request.texto.strip():
+        raise HTTPException(status_code=400, detail="El texto no puede estar vacío.")
+
+    audio_url = tts_service.sintetizar_audio(request.texto)
+
+    if not audio_url:
+        raise HTTPException(status_code=500, detail="No se pudo generar el audio.")
+
+    return {
+        "status": "success",
+        "audio_url": audio_url
+    }

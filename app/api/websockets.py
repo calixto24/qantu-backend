@@ -1,5 +1,6 @@
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from app.services.ollama_service import ollama_service
+from app.services.tts_service import tts_service
 import json
 
 router = APIRouter()
@@ -29,11 +30,15 @@ async def websocket_chat_endpoint(websocket: WebSocket):
                 })
 
                 # B) Recorrer el generador asíncrono de Ollama y mandar palabra por palabra
+                respuesta_acumulada = ""
                 async for chunk in ollama_service.generar_respuesta_stream(user_prompt):
+                    respuesta_acumulada += chunk
                     await websocket.send_json({
                         "event": "chunk",
                         "content": chunk
                     })
+
+                audio_url = tts_service.sintetizar_audio(respuesta_acumulada)
 
                 # C) Avisar al cliente que la respuesta finalizó
                 await websocket.send_json({
