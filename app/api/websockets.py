@@ -43,7 +43,8 @@ async def websocket_chat_endpoint(websocket: WebSocket):
                 # C) Avisar al cliente que la respuesta finalizó
                 await websocket.send_json({
                     "event": "end",
-                    "content": ""
+                    "content": respuesta_acumulada,
+                    "audio_url": audio_url
                 })
 
     except WebSocketDisconnect:
